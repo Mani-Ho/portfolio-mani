@@ -16,21 +16,22 @@ export default function Philosophy() {
 
       <div>
         <p className="rv">
-          <strong>One project at a time.</strong> I bill by the week or by the phase, never by the
-          hour. You know what you&apos;re paying for, I know what I&apos;m shipping.
+          <strong>Interactive web experiences.</strong> Micro-sites, landing pages, portfolios
+          that don&apos;t look like every other template. Available for projects that deserve
+          real attention to detail.
         </p>
         <p className="rv d1">
-          <strong>Design and code, by the same person.</strong> No Figma thrown over the wall.
-          Typography and motion decisions are made in the browser.
+          <strong>Hands-on, design-aware.</strong> I sketch, code, iterate fast. No Figma handoff:
+          typography, motion, interactions — all decided in the browser, where they actually live.
         </p>
         <p className="rv d2">
-          <strong>Performance by default.</strong> Lighthouse 95+ on every delivery — or you
-          don&apos;t pay the final phase. Simple promise, kept on every project.
+          <strong>Independent and focused.</strong> Solo practice. You get one person, full
+          attention, from kickoff to ship — no relay race, no agency overhead.
         </p>
 
         <div className="philo-bullet rv d3">
           <span>Availability</span>
-          <span className="v">Booking Q3 2026 · ~2 days/week</span>
+          <span className="v">Available now · Open to projects</span>
         </div>
         <div className="philo-bullet rv d3">
           <span>Location</span>

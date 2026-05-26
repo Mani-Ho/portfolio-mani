@@ -15,7 +15,7 @@ export default function Process() {
   const hasExperiments = EXPERIMENTS.length > 0;
 
   return (
-    <section className="section" id="process">
+    <section className="section" id="lab">
       <div className="lab-layout">
         <div>
           <div className="sec-tag rv">[ 03 / Lab ]</div>

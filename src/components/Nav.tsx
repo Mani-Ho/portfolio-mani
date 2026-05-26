@@ -6,13 +6,13 @@ export default function Nav() {
       </a>
       <ul className="nav-pill">
         <li>
-          <a href="#work">INDEX</a>
+          <a href="#hero">INDEX</a>
         </li>
         <li>
           <a href="#work">WORK</a>
         </li>
         <li>
-          <a href="#process">LAB</a>
+          <a href="#lab">LAB</a>
         </li>
         <li>
           <a href="#contact">INFO</a>
