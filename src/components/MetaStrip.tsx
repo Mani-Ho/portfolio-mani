@@ -5,7 +5,7 @@ export default function MetaStrip() {
   const items: Array<[string, string]> = [
     ['NOW', 'WebGL editorial site for Studio Trame'],
     ['NEXT', 'Available now · Q2 2026 onwards'],
-    ['STACK', 'React · TS · Three.js · WGSL'],
+    ['STACK', 'React · TS · Node · Express'],
     ['BASE', 'Cannes 43.55°N · Remote'],
   ];
   return (

@@ -133,14 +133,14 @@ export default function Hero({ ready }: HeroProps) {
       <div className="hero-content">
         <div>
           <h1 className={`hero-title${revealTitle ? ' vis' : ''}`}>
-            <StaggerWord text="CREATIVE" />
+            <StaggerWord text="FULLSTACK" />
             <br />
             <StaggerWord text="Developer" italic startDelay={380} step={32} />
           </h1>
           <p className={`hero-desc${revealDesc ? ' vis' : ''}`}>
-            Custom interfaces, motion design and real-time experiences.
+            Web apps, front to back. APIs, UIs, and the motion in between.
             <br />
-            React · TypeScript · Three.js · WebGL.
+            React · TypeScript · Node · Express.
           </p>
         </div>
 

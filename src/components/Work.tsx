@@ -15,8 +15,9 @@ interface Project {
 
 // 👉 Fill this array with your real projects as soon as possible.
 const PROJECTS: Project[] = [
-  // Example:
-  // { n: '01', title: 'Periphery', cat: 'WebGL · Editorial', feature: true, thumb: '/images/periphery.jpg', href: 'https://...' },
+  // Examples:
+  // { n: '01', title: 'App name', cat: 'Full-stack · React + Node', feature: true, thumb: '/images/app.jpg', href: 'https://...' },
+  // { n: '02', title: 'Other',    cat: 'Front-end · Three.js',     thumb: '/images/other.jpg',                href: 'https://...' },
 ];
 
 export default function Work() {
