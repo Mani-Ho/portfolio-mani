@@ -16,9 +16,9 @@ export default function Contact() {
       <div className="contact-inner rv">
         <div className="contact-sub">[ 04 / Contact ]</div>
         <h2 className="contact-h">
-          Let&apos;s build
+          Let&apos;s work
           <br />
-          <em>something weird.</em>
+          <em>together.</em>
         </h2>
         <a ref={emailRef} href="mailto:hello@mani.design" className="contact-email">
           <span className="arrow">→</span>
