@@ -27,7 +27,7 @@ html{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:rgba(255,255,25
 ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:3px}
 ::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.2)}
 
-body{font-family:var(--sans);background:var(--bg);color:var(--fg);overflow-x:hidden;-webkit-font-smoothing:antialiased;font-weight:400}
+body{font-family:var(--sans);background:var(--bg);color:var(--fg);overflow-x:clip;-webkit-font-smoothing:antialiased;font-weight:400}
 
 ::selection{background:var(--accent);color:var(--bg)}
 
@@ -81,7 +81,9 @@ nav.scrolled{padding-top:14px;padding-bottom:14px;background:rgba(6,7,10,0.6);ba
 @media(max-width:900px){.nav-pill,.nav-status{display:none}.nav-burger{display:flex}}
 
 /* ===== HERO ===== */
-.hero{position:relative;height:100vh;height:100dvh;min-height:680px;overflow:hidden;z-index:1}
+/* Tall "scene" that gives the cinematic hero zoom its scroll runway */
+.hero-stage{height:200vh}
+.hero{position:sticky;top:0;height:100vh;height:100dvh;min-height:680px;overflow:hidden;z-index:1}
 .hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(1.1) contrast(1.05);opacity:0;transition:opacity 1.8s ease}
 .hero-video.on{opacity:.9}
 .hero-overlay{position:absolute;inset:0;background:
@@ -226,6 +228,7 @@ footer{padding:32px clamp(20px,3vw,56px);border-top:1px solid var(--line);displa
   html{scroll-behavior:auto}
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;animation-delay:0ms!important;transition-duration:.01ms!important;transition-delay:0ms!important}
   /* show content in its final state, no entrance motion */
+  .hero-stage{height:auto}
   .hero-video{opacity:.9}
   .hero-title .sw-letter,.hero-desc,.hero-scroll,.rv{opacity:1!important;transform:none!important}
 }

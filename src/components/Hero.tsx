@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { motion, useScroll, useTransform, useReducedMotion } from 'motion/react';
 
 interface HeroProps {
   ready: boolean;
@@ -27,7 +28,7 @@ function StaggerWord({
           className="sw-letter"
           style={{ ['--d' as string]: `${startDelay + i * step}ms` }}
         >
-          {c === ' ' ? '\u00A0' : c}
+          {c === ' ' ? ' ' : c}
         </span>
       ))}
     </span>
@@ -36,13 +37,35 @@ function StaggerWord({
 
 export default function Hero({ ready }: HeroProps) {
   const vidRef = useRef<HTMLVideoElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
   const [vidOn, setVidOn] = useState(false);
   const [revealTitle, setRevealTitle] = useState(false);
   const [revealDesc, setRevealDesc] = useState(false);
   const [revealScroll, setRevealScroll] = useState(false);
   const [clock, setClock] = useState('');
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Video: fade-in once ready + parallax on scroll
+  // Cinematic zoom — map scroll progress through the tall stage onto the hero's
+  // scale + opacity. useScroll reads native scroll (which Lenis drives), so it
+  // works without extra wiring. Disabled under reduced-motion, milder on mobile.
+  const reduced = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: stageRef,
+    offset: ['start start', 'end end'],
+  });
+  const maxScale = reduced ? 1 : isMobile ? 1.3 : 1.6;
+  const scale = useTransform(scrollYProgress, [0, 1], [1, maxScale]);
+  const opacity = useTransform(scrollYProgress, [0.6, 1], [1, 0]);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 768px)');
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+
+  // Video: fade in once it can play
   useEffect(() => {
     const vid = vidRef.current;
     if (!vid) return;
@@ -52,18 +75,9 @@ export default function Hero({ ready }: HeroProps) {
     vid.addEventListener('loadeddata', showVid);
     if (vid.readyState >= 2) showVid();
 
-    // Parallax — skip entirely when the user asked to reduce motion.
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const onScroll = () => {
-      const r = Math.min(window.pageYOffset / window.innerHeight, 1);
-      vid.style.transform = `scale(${1 + r * 0.08}) translateY(${r * 30}px)`;
-    };
-    if (!reduced) window.addEventListener('scroll', onScroll, { passive: true });
-
     return () => {
       vid.removeEventListener('canplaythrough', showVid);
       vid.removeEventListener('loadeddata', showVid);
-      window.removeEventListener('scroll', onScroll);
     };
   }, []);
 
@@ -99,68 +113,70 @@ export default function Hero({ ready }: HeroProps) {
   }, []);
 
   return (
-    <section className="hero" id="hero">
-      <video
-        className={`hero-video${vidOn ? ' on' : ''}`}
-        ref={vidRef}
-        autoPlay
-        muted
-        loop
-        playsInline
-        aria-hidden="true"
-      >
-        <source src="/videos/hero.mp4" type="video/mp4" />
-      </video>
+    <div className="hero-stage" ref={stageRef}>
+      <motion.section className="hero" id="hero" style={reduced ? undefined : { scale, opacity }}>
+        <video
+          className={`hero-video${vidOn ? ' on' : ''}`}
+          ref={vidRef}
+          autoPlay
+          muted
+          loop
+          playsInline
+          aria-hidden="true"
+        >
+          <source src="/videos/hero.mp4" type="video/mp4" />
+        </video>
 
-      <div className="hero-overlay" />
-      <div className="hero-tint" />
-      <div className="hero-scanlines" />
+        <div className="hero-overlay" />
+        <div className="hero-tint" />
+        <div className="hero-scanlines" />
 
-      {/* Viewfinder corners */}
-      <div className="vf tl" />
-      <div className="vf tr" />
-      <div className="vf bl" />
-      <div className="vf br" />
+        {/* Viewfinder corners */}
+        <div className="vf tl" />
+        <div className="vf tr" />
+        <div className="vf bl" />
+        <div className="vf br" />
 
-      {/* REC indicator */}
-      <div className="hero-rec">
-        <span className="dot" />
-        REC / LIVE REEL
-      </div>
-
-      {/* Top-left meta */}
-      <div className="hero-top-meta">
-        <div>
-          [ <span className="k">00</span> / HELLO ]
-        </div>
-        <div>v.2026.05</div>
-        <div>{clock}</div>
-      </div>
-
-      {/* Title + scroll */}
-      <div className="hero-content">
-        <div>
-          <h1 className={`hero-title${revealTitle ? ' vis' : ''}`}>
-            <StaggerWord text="FULLSTACK" />
-            <br />
-            <StaggerWord text="Developer" italic startDelay={380} step={32} />
-          </h1>
-          <p className={`hero-desc${revealDesc ? ' vis' : ''}`}>
-            Web apps, front to back. APIs, UIs, and the motion in between.
-            <br />
-            React · TypeScript · Node · Express.
-          </p>
+        {/* REC indicator */}
+        <div className="hero-rec">
+          <span className="dot" />
+          REC / LIVE REEL
         </div>
 
-        <div className={`hero-scroll${revealScroll ? ' vis' : ''}`}>
+        {/* Top-left meta */}
+        <div className="hero-top-meta">
           <div>
-            [ SCROLL ]
-            <br />
-            ENTER THE WORK ↓
+            [ <span className="k">00</span> / HELLO ]
           </div>
-          <div className="hero-scroll-line" />
+          <div>v.2026.05</div>
+          <div>{clock}</div>
         </div>
-      </div>
-    </section>
+
+        {/* Title + scroll */}
+        <div className="hero-content">
+          <div>
+            <h1 className={`hero-title${revealTitle ? ' vis' : ''}`}>
+              <StaggerWord text="FULLSTACK" />
+              <br />
+              <StaggerWord text="Developer" italic startDelay={380} step={32} />
+            </h1>
+            <p className={`hero-desc${revealDesc ? ' vis' : ''}`}>
+              Web apps, front to back. APIs, UIs, and the motion in between.
+              <br />
+              React · TypeScript · Node · Express.
+            </p>
+          </div>
+
+          <div className={`hero-scroll${revealScroll ? ' vis' : ''}`}>
+            <div>
+              [ SCROLL ]
+              <br />
+              ENTER THE WORK ↓
+            </div>
+            <div className="hero-scroll-line" />
+          </div>
+        </div>
+      </motion.section>
+    </div>
   );
 }
