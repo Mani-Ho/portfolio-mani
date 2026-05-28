@@ -33,7 +33,8 @@ export default function Orb() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0);
 
-    const geo = new THREE.IcosahedronGeometry(1, 48);
+    // detail 24 still resolves the noise ridges with ~4x fewer triangles than 48
+    const geo = new THREE.IcosahedronGeometry(1, 24);
 
     const uniforms = {
       uTime: { value: 0 },
@@ -180,17 +181,14 @@ export default function Orb() {
       pulse = 1;
     };
 
-    canvas.addEventListener('pointerdown', onDown);
-    canvas.addEventListener('pointermove', onMove);
-    canvas.addEventListener('pointerup', onUp);
-    canvas.addEventListener('pointercancel', onUp);
-    canvas.addEventListener('click', onClick);
-
-    let rafId = 0;
     const clock = new THREE.Clock();
+    let t = 0;
+    let rafId = 0;
+    let running = false;
+
     const animate = () => {
       rafId = requestAnimationFrame(animate);
-      const t = clock.getElapsedTime();
+      t += clock.getDelta();
       uniforms.uTime.value = t;
       pulse *= 0.94;
       uniforms.uPulse.value = pulse;
@@ -200,10 +198,44 @@ export default function Orb() {
       sphere.rotation.y = rotY + t * 0.12;
       renderer.render(scene, camera);
     };
-    animate();
+
+    // Only render while on-screen — saves GPU/battery when scrolled away.
+    const start = () => {
+      if (running) return;
+      running = true;
+      clock.start(); // reset delta so rotation doesn't jump after a pause
+      rafId = requestAnimationFrame(animate);
+    };
+    const stop = () => {
+      running = false;
+      cancelAnimationFrame(rafId);
+    };
+
+    renderer.render(scene, camera); // initial static frame
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let io: IntersectionObserver | null = null;
+
+    if (!reduced) {
+      canvas.addEventListener('pointerdown', onDown);
+      canvas.addEventListener('pointermove', onMove);
+      canvas.addEventListener('pointerup', onUp);
+      canvas.addEventListener('pointercancel', onUp);
+      canvas.addEventListener('click', onClick);
+
+      io = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) start();
+          else stop();
+        },
+        { threshold: 0.01 },
+      );
+      io.observe(wrap);
+    }
 
     return () => {
-      cancelAnimationFrame(rafId);
+      stop();
+      io?.disconnect();
       canvas.removeEventListener('pointerdown', onDown);
       canvas.removeEventListener('pointermove', onMove);
       canvas.removeEventListener('pointerup', onUp);

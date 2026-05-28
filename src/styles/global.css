@@ -9,7 +9,7 @@
   --bg2:#0a0c12;
   --fg:#e8ebf0;
   --muted:rgba(232,235,240,0.55);
-  --muted2:rgba(232,235,240,0.35);
+  --muted2:rgba(232,235,240,0.5);
   --line:rgba(255,255,255,0.06);
   --line2:rgba(255,255,255,0.1);
   --accent:#5ec6f7;
@@ -74,14 +74,14 @@ nav.scrolled{padding-top:14px;padding-bottom:14px;background:rgba(6,7,10,0.6);ba
 .nav-mobile.open{opacity:1;pointer-events:auto}
 .nav-mobile ul{list-style:none;display:flex;flex-direction:column;align-items:center;gap:28px}
 .nav-mobile a{font-family:var(--sans);font-size:32px;font-weight:500;letter-spacing:-1px;color:var(--fg);text-decoration:none;transition:color .25s}
-.nav-mobile a:hover,.nav-mobile a:focus-visible{color:var(--accent)}
+.nav-mobile a:hover,.nav-mobile a:focus-visible,.nav-mobile a.active{color:var(--accent)}
 .nav-mobile-status{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--muted);display:flex;align-items:center;gap:8px}
 .nav-mobile-status .live{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px rgba(95,212,126,0.7);display:inline-block}
 
 @media(max-width:900px){.nav-pill,.nav-status{display:none}.nav-burger{display:flex}}
 
 /* ===== HERO ===== */
-.hero{position:relative;height:100vh;min-height:680px;overflow:hidden;z-index:1}
+.hero{position:relative;height:100vh;height:100dvh;min-height:680px;overflow:hidden;z-index:1}
 .hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(1.1) contrast(1.05);opacity:0;transition:opacity 1.8s ease}
 .hero-video.on{opacity:.9}
 .hero-overlay{position:absolute;inset:0;background:
@@ -200,9 +200,12 @@ nav.scrolled{padding-top:14px;padding-bottom:14px;background:rgba(6,7,10,0.6);ba
 .orb-canvas{width:340px;height:340px;border-radius:50%;box-shadow:0 0 80px var(--accent-glow);cursor:grab;display:block;touch-action:none}
 .orb-canvas:active{cursor:grabbing}
 .orb-label{position:absolute;font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--accent);white-space:nowrap}
-.orb-label.top{top:-22px;left:50%;transform:translateX(-50%)}
+.orb-label.top{top:-22px;left:50%;transform:translateX(-50%);display:none}
 .orb-label.bot{bottom:-22px;left:50%;transform:translateX(-50%);color:var(--muted)}
 @keyframes orbRot{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+/* Orb is interactive only with a precise pointer (desktop); on touch it stays
+   ambient so dragging it never traps page scroll. The DRAG label follows suit. */
+@media(hover:hover) and (pointer:fine){.orb-canvas{pointer-events:auto}.orb-label.top{display:block}}
 @media(max-width:768px){.orb-wrap{width:380px;height:380px}.orb-canvas{width:260px;height:260px}}
 
 /* ===== FOOTER ===== */
