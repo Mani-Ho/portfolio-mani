@@ -8,7 +8,6 @@ const Orb = lazy(() => import('./Orb'));
 // 👉 TODO Mani : remplace ces URL par tes vrais profils.
 const SOCIALS = [
   { label: 'Github', href: 'https://github.com/Mani-Ho' },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/' },
   { label: 'X', href: 'https://x.com/' },
   { label: 'Instagram', href: 'https://www.instagram.com/' },
 ];
