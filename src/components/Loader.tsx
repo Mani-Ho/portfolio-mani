@@ -49,9 +49,16 @@ export default function Loader({ onFinish }: LoaderProps) {
   }, [onFinish]);
 
   return (
-    <div id="loader" className={hide ? 'hide' : ''}>
+    <div id="loader" className={hide ? 'hide' : ''} aria-busy={!hide}>
       <div className="ld-meta">MANI · LOADING REEL</div>
-      <div className="ld-line">
+      <div
+        className="ld-line"
+        role="progressbar"
+        aria-label="Loading"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={Math.floor(pct)}
+      >
         <div className="ld-fill" style={{ width: `${pct}%` }} />
       </div>
       <div className="ld-pct">{String(Math.floor(pct)).padStart(2, '0')}%</div>

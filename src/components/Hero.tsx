@@ -80,13 +80,18 @@ export default function Hero({ ready }: HeroProps) {
     };
   }, [ready]);
 
-  // Live Cannes clock (top-left meta)
+  // Live Cannes clock — always Paris time, regardless of the visitor's timezone
   useEffect(() => {
     const tick = () => {
-      const d = new Date();
-      const h = d.getHours().toString().padStart(2, '0');
-      const m = d.getMinutes().toString().padStart(2, '0');
-      setClock(`${h}:${m} CET`);
+      const parts = new Intl.DateTimeFormat('en-GB', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+        timeZone: 'Europe/Paris',
+        timeZoneName: 'short',
+      }).formatToParts(new Date());
+      const get = (type: string) => parts.find((p) => p.type === type)?.value ?? '';
+      setClock(`${get('hour')}:${get('minute')} ${get('timeZoneName')}`);
     };
     tick();
     const iv = window.setInterval(tick, 30_000);
@@ -102,6 +107,7 @@ export default function Hero({ ready }: HeroProps) {
         muted
         loop
         playsInline
+        aria-hidden="true"
       >
         <source src="/videos/hero.mp4" type="video/mp4" />
       </video>
