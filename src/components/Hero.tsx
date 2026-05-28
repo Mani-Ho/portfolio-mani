@@ -52,11 +52,13 @@ export default function Hero({ ready }: HeroProps) {
     vid.addEventListener('loadeddata', showVid);
     if (vid.readyState >= 2) showVid();
 
+    // Parallax — skip entirely when the user asked to reduce motion.
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const onScroll = () => {
       const r = Math.min(window.pageYOffset / window.innerHeight, 1);
       vid.style.transform = `scale(${1 + r * 0.08}) translateY(${r * 30}px)`;
     };
-    window.addEventListener('scroll', onScroll, { passive: true });
+    if (!reduced) window.addEventListener('scroll', onScroll, { passive: true });
 
     return () => {
       vid.removeEventListener('canplaythrough', showVid);

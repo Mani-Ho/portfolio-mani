@@ -32,3 +32,6 @@ pnpm-debug.log*
 .env
 .env.local
 .env.*.local
+
+# Superpowers brainstorm mockups
+.superpowers/

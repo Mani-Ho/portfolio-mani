@@ -31,6 +31,11 @@ body{font-family:var(--sans);background:var(--bg);color:var(--fg);overflow-x:hid
 
 ::selection{background:var(--accent);color:var(--bg)}
 
+/* ===== FOCUS — visible ring for keyboard users (a11y) ===== */
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+/* mouse clicks shouldn't show the ring on these custom controls */
+a:focus:not(:focus-visible),button:focus:not(:focus-visible){outline:none}
+
 /* ===== CURSOR — minimal accent ring ===== */
 #cur{position:fixed;pointer-events:none;z-index:99999;mix-blend-mode:exclusion}
 #cur-dot{width:4px;height:4px;background:var(--accent);border-radius:50%;position:absolute;transform:translate(-50%,-50%);transition:.15s}
@@ -56,7 +61,24 @@ nav.scrolled{padding-top:14px;padding-bottom:14px;background:rgba(6,7,10,0.6);ba
 .nav-pill a.active{background:var(--accent);color:var(--bg);font-weight:600}
 .nav-status{font-family:var(--mono);font-size:11px;color:var(--muted);display:flex;align-items:center;gap:8px}
 .nav-status .live{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px rgba(95,212,126,0.7);display:inline-block}
-@media(max-width:900px){.nav-pill,.nav-status{display:none}nav{padding-left:56px}}
+
+/* Burger — hidden on desktop, shown on mobile */
+.nav-burger{display:none;position:relative;z-index:9100;width:44px;height:44px;flex-direction:column;align-items:center;justify-content:center;gap:5px;background:rgba(255,255,255,0.04);border:1px solid var(--line);border-radius:10px;cursor:pointer;transition:background .25s}
+.nav-burger:hover{background:rgba(255,255,255,0.08)}
+.nav-burger span{display:block;width:18px;height:1.5px;background:var(--fg);transition:transform .3s ease,opacity .3s ease}
+.nav-burger.open span:nth-child(1){transform:translateY(3.25px) rotate(45deg)}
+.nav-burger.open span:nth-child(2){transform:translateY(-3.25px) rotate(-45deg)}
+
+/* Mobile menu — full-screen overlay */
+.nav-mobile{position:fixed;inset:0;z-index:8000;background:rgba(6,7,10,0.94);backdrop-filter:blur(24px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:48px;opacity:0;pointer-events:none;transition:opacity .4s ease}
+.nav-mobile.open{opacity:1;pointer-events:auto}
+.nav-mobile ul{list-style:none;display:flex;flex-direction:column;align-items:center;gap:28px}
+.nav-mobile a{font-family:var(--sans);font-size:32px;font-weight:500;letter-spacing:-1px;color:var(--fg);text-decoration:none;transition:color .25s}
+.nav-mobile a:hover,.nav-mobile a:focus-visible{color:var(--accent)}
+.nav-mobile-status{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.nav-mobile-status .live{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px rgba(95,212,126,0.7);display:inline-block}
+
+@media(max-width:900px){.nav-pill,.nav-status{display:none}.nav-burger{display:flex}}
 
 /* ===== HERO ===== */
 .hero{position:relative;height:100vh;min-height:680px;overflow:hidden;z-index:1}
@@ -195,3 +217,12 @@ footer{padding:32px clamp(20px,3vw,56px);border-top:1px solid var(--line);displa
 .rv{opacity:0;transform:translateY(20px);transition:opacity .8s cubic-bezier(.25,.46,.45,.94),transform .8s cubic-bezier(.25,.46,.45,.94)}
 .rv.vis{opacity:1;transform:translateY(0)}
 .rv.d1{transition-delay:.1s}.rv.d2{transition-delay:.2s}.rv.d3{transition-delay:.3s}.rv.d4{transition-delay:.4s}
+
+/* ===== REDUCED MOTION — respect OS "reduce motion" setting (a11y) ===== */
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;animation-delay:0ms!important;transition-duration:.01ms!important;transition-delay:0ms!important}
+  /* show content in its final state, no entrance motion */
+  .hero-video{opacity:.9}
+  .hero-title .sw-letter,.hero-desc,.hero-scroll,.rv{opacity:1!important;transform:none!important}
+}

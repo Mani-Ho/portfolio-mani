@@ -16,6 +16,8 @@ export function useMagnetic<T extends HTMLElement>(
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    // Respect reduced-motion: keep the button perfectly still.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     let raf = 0;
     let cx = 0;
