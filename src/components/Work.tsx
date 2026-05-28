@@ -13,11 +13,16 @@ interface Project {
   thumb?: string; // image path in /public or external URL
 }
 
-// 👉 Fill this array with your real projects as soon as possible.
 const PROJECTS: Project[] = [
-  // Examples:
-  // { n: '01', title: 'App name', cat: 'Full-stack · React + Node', feature: true, thumb: '/images/app.jpg', href: 'https://...' },
-  // { n: '02', title: 'Other',    cat: 'Front-end · Three.js',     thumb: '/images/other.jpg',                href: 'https://...' },
+  {
+    n: '01',
+    title: 'Maestroni Concept',
+    cat: 'Site vitrine · React',
+    feature: true,
+    href: 'https://www.maestroni-concept.fr/',
+    thumb: '/images/maestroni.jpg',
+  },
+  // 👉 Add the next project here (same shape).
 ];
 
 export default function Work() {
