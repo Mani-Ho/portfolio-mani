@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { motion, useScroll, useTransform, useReducedMotion } from 'motion/react';
 import { useMagnetic } from '../hooks/useMagnetic';
 
 // Three.js is heavy (~600kB) and only used here — load it on demand.
@@ -17,6 +18,15 @@ export default function Contact() {
   const sectionRef = useRef<HTMLElement>(null);
   const [showOrb, setShowOrb] = useState(false);
   useMagnetic(emailRef, 0.35, 160);
+
+  // Signature "awakening": the orb scales up + fades in as Contact enters view.
+  const reduced = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'center center'],
+  });
+  const scale = useTransform(scrollYProgress, [0, 1], [0.4, 1]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
 
   // Defer loading the Three.js orb until the contact section is approaching.
   useEffect(() => {
@@ -38,11 +48,13 @@ export default function Contact() {
   return (
     <section className="contact" id="contact" ref={sectionRef}>
       <div className="contact-orb-wrap">
-        {showOrb && (
-          <Suspense fallback={null}>
-            <Orb />
-          </Suspense>
-        )}
+        <motion.div style={reduced ? undefined : { scale, opacity }}>
+          {showOrb && (
+            <Suspense fallback={null}>
+              <Orb />
+            </Suspense>
+          )}
+        </motion.div>
       </div>
       <div className="contact-vignette" />
 
