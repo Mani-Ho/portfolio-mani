@@ -1,6 +1,8 @@
-import { useRef } from 'react';
-import Orb from './Orb';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { useMagnetic } from '../hooks/useMagnetic';
+
+// Three.js is heavy (~600kB) and only used here — load it on demand.
+const Orb = lazy(() => import('./Orb'));
 
 // 👉 TODO Mani : remplace ces URL par tes vrais profils.
 const SOCIALS = [
@@ -12,12 +14,35 @@ const SOCIALS = [
 
 export default function Contact() {
   const emailRef = useRef<HTMLAnchorElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const [showOrb, setShowOrb] = useState(false);
   useMagnetic(emailRef, 0.35, 160);
 
+  // Defer loading the Three.js orb until the contact section is approaching.
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setShowOrb(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: '300px 0px' },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   return (
-    <section className="contact" id="contact">
+    <section className="contact" id="contact" ref={sectionRef}>
       <div className="contact-orb-wrap">
-        <Orb />
+        {showOrb && (
+          <Suspense fallback={null}>
+            <Orb />
+          </Suspense>
+        )}
       </div>
       <div className="contact-vignette" />
 
