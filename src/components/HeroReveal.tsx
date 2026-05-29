@@ -39,6 +39,9 @@ export default function HeroReveal({ ready }: HeroRevealProps) {
   const reduced = useReducedMotion();
   const [overlayHidden, setOverlayHidden] = useState(false);
   const [intro, setIntro] = useState(false);
+  // Tiles start scaled to 0 (invisible) and only assemble mid-scroll. Keep them
+  // out of the keyboard tab order / a11y tree until they're actually on screen.
+  const [tilesLive, setTilesLive] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: stageRef,
@@ -69,6 +72,9 @@ export default function HeroReveal({ ready }: HeroRevealProps) {
   // back in: hide once 22% into the zoom-out, only show again near the very top.
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
     setOverlayHidden((h) => (h ? v > 0.04 : v > 0.22));
+    // Mirror the tiles' assemble window (edges in by ~0.62, corners by ~0.7):
+    // go interactive a touch before they finish, with hysteresis to avoid flicker.
+    if (!reduced) setTilesLive((live) => (live ? v > 0.5 : v > 0.6));
   });
 
   // Measure viewport + natural center-cell size for the width/height animation.
@@ -113,6 +119,12 @@ export default function HeroReveal({ ready }: HeroRevealProps) {
     return () => window.clearTimeout(t);
   }, [ready]);
 
+  // Under reduced-motion the grid is shown statically from the start, so the
+  // tiles must be focusable straight away (the scroll watcher above is skipped).
+  useEffect(() => {
+    if (reduced) setTilesLive(true);
+  }, [reduced]);
+
   const tileStyle = (group: 'edge' | 'corner') =>
     reduced
       ? undefined
@@ -147,6 +159,8 @@ export default function HeroReveal({ ready }: HeroRevealProps) {
             target={external ? '_blank' : undefined}
             rel={external ? 'noreferrer' : undefined}
             aria-label={`${t.label}${'sub' in t && t.sub ? ` — ${t.sub}` : ''}`}
+            aria-hidden={tilesLive ? undefined : true}
+            tabIndex={tilesLive ? undefined : -1}
           >
             {inner}
           </motion.a>
@@ -181,7 +195,10 @@ export default function HeroReveal({ ready }: HeroRevealProps) {
   const after = TILES.slice(4);
 
   return (
-    <div className="reveal-stage" id="hero" ref={stageRef}>
+    <div className="reveal-stage" ref={stageRef}>
+      {/* INDEX nav target + scrollspy marker: short box at the very top, so the
+          link scrolls to the top and only highlights during the intro. */}
+      <span id="hero" className="reveal-spy hero" aria-hidden="true" />
       <div className="reveal-pin">
         {/* Title / HUD overlay — full-screen at the start, fades as we zoom out */}
         <div className={`reveal-overlay${!reduced && overlayHidden ? ' hidden' : ''}`}>
@@ -224,8 +241,9 @@ export default function HeroReveal({ ready }: HeroRevealProps) {
         )}
       </div>
 
-      {/* anchor so the WORK nav link lands on the revealed grid */}
-      <span id="work" className="reveal-work-anchor" aria-hidden="true" />
+      {/* WORK nav target + scrollspy marker: spans the lower half of the runway,
+          so the link lands on the assembled grid and highlights once it forms. */}
+      <span id="work" className="reveal-spy work" aria-hidden="true" />
     </div>
   );
 }
