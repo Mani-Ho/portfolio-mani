@@ -2,9 +2,8 @@ import { useState } from 'react';
 import Loader from './components/Loader';
 import Cursor from './components/Cursor';
 import Nav from './components/Nav';
-import Hero from './components/Hero';
+import HeroReveal from './components/HeroReveal';
 import MetaStrip from './components/MetaStrip';
-import Work from './components/Work';
 import Philosophy from './components/Philosophy';
 import Process from './components/Process';
 import Contact from './components/Contact';
@@ -25,9 +24,8 @@ export default function App() {
       <Cursor />
       {!loaderDone && <Loader onFinish={() => setLoaderDone(true)} />}
       <Nav />
-      <Hero ready={loaderDone} />
+      <HeroReveal ready={loaderDone} />
       <MetaStrip />
-      <Work />
       <Philosophy />
       <Process />
       <Contact />

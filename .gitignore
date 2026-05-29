@@ -35,3 +35,6 @@ pnpm-debug.log*
 
 # Superpowers brainstorm mockups
 .superpowers/
+
+# Local Claude Code tooling / skills
+.claude/
