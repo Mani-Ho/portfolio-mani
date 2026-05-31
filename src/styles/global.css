@@ -129,7 +129,7 @@ nav.scrolled{padding-top:14px;padding-bottom:14px;background:color-mix(in srgb, 
 .reveal-grid{position:relative;width:min(900px,74vmin);height:min(900px,74vmin);margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:clamp(8px,1.6vmin,22px)}
 .rcell{position:relative}
 .rcell-center{z-index:2}
-.rtile{position:relative;width:100%;height:100%;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:rgba(255,255,255,0.02);display:flex;flex-direction:column;justify-content:flex-end;text-decoration:none;color:var(--fg);transform-origin:center;will-change:transform,opacity;transition:border-color .3s}
+.rtile{position:relative;width:100%;height:100%;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:rgba(255,255,255,0.02);display:flex;flex-direction:column;justify-content:flex-end;text-decoration:none;color:var(--fg);transform-origin:center;transition:border-color .3s}
 a.rtile{cursor:pointer}
 .rtile:hover{border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
 .rtile-thumb{position:absolute;inset:0;background-size:cover;background-position:center}
@@ -145,7 +145,11 @@ a.rtile{cursor:pointer}
 .rtile-cta{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent)}
 .rtile-cta .rtile-sub{color:var(--accent);font-size:clamp(12px,2vmin,18px)}
 .rcell-center{overflow:hidden;border-radius:14px}
-.reveal-center-vid{position:absolute;transform:translate(-50%,-50%);z-index:2;border-radius:14px;overflow:hidden;box-shadow:0 0 0 1px var(--line);will-change:width,height,left,top}
+/* translateZ(0) promotes this to its own compositor layer, so resizing the
+   video on scroll repaints only its layer — the grid + background behind it
+   stay put. (will-change is omitted on purpose: it can't optimize the
+   width/height/left/top we animate here, only transform/opacity.) */
+.reveal-center-vid{position:absolute;transform:translate(-50%,-50%) translateZ(0);z-index:2;border-radius:14px;overflow:hidden;box-shadow:0 0 0 1px var(--line)}
 .reveal-section-title{z-index:4;margin:0;font-family:var(--sans);font-weight:500;font-size:clamp(20px,4.4vmin,42px);letter-spacing:-1px;line-height:1;text-align:center;pointer-events:none;opacity:1}
 .reveal-section-title em{font-family:var(--serif);font-style:italic;color:var(--accent);font-weight:400}
 .reveal-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(1.1) contrast(1.05);opacity:0;transition:opacity 1.2s ease}
@@ -155,7 +159,7 @@ a.rtile{cursor:pointer}
 /* title intro — one-shot rise + fade in (decoupled from the scroll fade) */
 .reveal-title{opacity:0;transform:translateY(28px);transition:opacity .9s ease,transform .9s cubic-bezier(.2,.7,.2,1)}
 .reveal-title.in{opacity:1;transform:none}
-.reveal-desc{font-family:var(--mono);font-size:12px;color:var(--muted);line-height:1.7;margin-top:18px;max-width:380px}
+.reveal-desc{font-family:var(--mono);font-size:13px;color:var(--muted);line-height:1.7;margin-top:18px;max-width:380px}
 .reveal-scroll{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--muted);margin-top:24px}
 /* Scrollspy markers — invisible boxes the nav's IntersectionObserver tracks.
    #hero sits at the very top (so INDEX scrolls to top and only lights up during
