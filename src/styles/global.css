@@ -78,50 +78,9 @@ nav.scrolled{padding-top:14px;padding-bottom:14px;background:color-mix(in srgb, 
 
 @media(max-width:900px){.nav-pill,.nav-status{display:none}.nav-burger{display:flex}}
 
-/* ===== HERO ===== */
-/* Tall "scene" that gives the cinematic hero zoom its scroll runway */
-.hero-stage{height:200vh}
-.hero{position:sticky;top:0;height:100vh;height:100dvh;min-height:680px;overflow:hidden;z-index:1}
-.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(1.1) contrast(1.05);opacity:0;transition:opacity 1.8s ease}
-.hero-video.on{opacity:.9}
-.hero-overlay{position:absolute;inset:0;background:
-  linear-gradient(180deg,color-mix(in srgb, var(--bg) 55%, transparent) 0%,color-mix(in srgb, var(--bg) 30%, transparent) 40%,color-mix(in srgb, var(--bg) 90%, transparent) 100%),
-  linear-gradient(90deg,color-mix(in srgb, var(--bg) 50%, transparent) 0%,transparent 50%,color-mix(in srgb, var(--bg) 45%, transparent) 100%)}
-.hero-tint{position:absolute;inset:0;background:radial-gradient(ellipse at 70% 30%, color-mix(in srgb, var(--accent) 18%, transparent) 0%, transparent 55%);mix-blend-mode:screen;pointer-events:none}
-.hero-scanlines{position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,0.02) 0 1px,transparent 1px 3px);opacity:.6;pointer-events:none}
-
-/* Viewfinder corner ticks */
-.vf{position:absolute;width:22px;height:22px;pointer-events:none}
-.vf.tl{top:24px;left:24px;border-top:1px solid var(--accent);border-left:1px solid var(--accent)}
-.vf.tr{top:24px;right:24px;border-top:1px solid var(--accent);border-right:1px solid var(--accent)}
-.vf.bl{bottom:24px;left:24px;border-bottom:1px solid var(--accent);border-left:1px solid var(--accent)}
-.vf.br{bottom:24px;right:24px;border-bottom:1px solid var(--accent);border-right:1px solid var(--accent)}
-/* Hide the viewfinder corner ticks on mobile — they clutter the smaller frame */
-@media(max-width:768px){.vf{display:none}}
-
-.hero-rec{position:absolute;top:92px;right:clamp(20px,3vw,56px);display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;letter-spacing:2.5px;color:var(--accent);z-index:3}
-.hero-rec .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent-glow);animation:recBlink 1.4s ease-in-out infinite}
-@keyframes recBlink{0%,100%{opacity:1}50%{opacity:.3}}
-
-.hero-top-meta{position:absolute;top:92px;left:clamp(20px,3vw,56px);font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--muted);line-height:1.8;z-index:3}
-.hero-top-meta .k{color:var(--accent)}
-
-.hero-content{position:absolute;bottom:60px;left:clamp(20px,3vw,56px);right:clamp(20px,3vw,56px);display:flex;justify-content:space-between;align-items:flex-end;z-index:3;gap:48px}
+/* ===== HERO TITLE — the only hero styles still in use, reused by HeroReveal ===== */
 .hero-title{font-family:var(--sans);font-size:clamp(56px,11vw,144px);font-weight:500;line-height:.92;letter-spacing:-4px;margin:0;opacity:1}
 .hero-title em{font-family:var(--serif);font-style:italic;color:var(--accent);font-weight:400;letter-spacing:-2px;display:inline-block}
-
-/* Letter stagger reveal — each letter rises in cascade when .vis is added */
-.hero-title .sw{display:inline-flex;overflow:hidden;line-height:.92}
-.hero-title .sw.sw-italic{font-family:var(--serif);font-style:italic;color:var(--accent);font-weight:400;letter-spacing:-2px}
-.hero-title .sw-letter{display:inline-block;transform:translateY(110%);opacity:0;will-change:transform,opacity}
-.hero-title.vis .sw-letter{animation:swReveal .95s cubic-bezier(.2,.7,.2,1) var(--d,0ms) forwards}
-@keyframes swReveal{from{opacity:0;transform:translateY(110%)}to{opacity:1;transform:translateY(0)}}
-.hero-desc{font-family:var(--mono);font-size:12px;color:var(--muted);max-width:380px;line-height:1.7;margin-top:18px;opacity:0;transform:translateY(20px);transition:opacity .8s .9s, transform .8s .9s}
-.hero-desc.vis{opacity:1;transform:translateY(0)}
-.hero-scroll{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--muted);text-align:right;line-height:1.8;display:flex;flex-direction:column;align-items:flex-end;gap:14px;opacity:0;transition:opacity .8s 1.2s}
-.hero-scroll.vis{opacity:1}
-.hero-scroll-line{width:1px;height:60px;background:linear-gradient(to bottom,var(--accent),transparent)}
-@media(max-width:900px){.hero-content{flex-direction:column;align-items:flex-start;gap:24px;bottom:48px}.hero-scroll{align-items:flex-start;text-align:left}.hero-rec{top:auto;bottom:24px;right:24px}}
 
 /* ===== HERO REVEAL — zoom-out from the hero video to a project grid ===== */
 .reveal-stage{position:relative;height:280vh}
@@ -132,7 +91,7 @@ nav.scrolled{padding-top:14px;padding-bottom:14px;background:color-mix(in srgb, 
 .rtile{position:relative;width:100%;height:100%;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:rgba(255,255,255,0.02);display:flex;flex-direction:column;justify-content:flex-end;text-decoration:none;color:var(--fg);transform-origin:center;transition:border-color .3s}
 a.rtile{cursor:pointer}
 .rtile:hover{border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
-.rtile-thumb{position:absolute;inset:0;background-size:cover;background-position:center}
+.rtile-thumb{position:absolute;inset:0;background-size:160% auto;background-position:top left}
 .rtile-body{position:relative;z-index:1;padding:clamp(8px,1.4vmin,16px);display:flex;flex-direction:column;gap:2px}
 .rtile-label{font-family:var(--sans);font-weight:600;letter-spacing:-0.5px;font-size:clamp(12px,2.1vmin,20px)}
 .rtile-sub{font-family:var(--mono);font-size:clamp(8px,1.3vmin,11px);letter-spacing:1.5px;color:var(--muted);text-transform:uppercase}
@@ -277,9 +236,7 @@ footer{padding:32px clamp(20px,3vw,56px);border-top:1px solid var(--line);displa
   html{scroll-behavior:auto}
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;animation-delay:0ms!important;transition-duration:.01ms!important;transition-delay:0ms!important}
   /* show content in its final state, no entrance motion */
-  .hero-stage{height:auto}
-  .hero-video{opacity:.9}
-  .hero-title .sw-letter,.hero-desc,.hero-scroll,.rv,.reveal-title{opacity:1!important;transform:none!important}
+  .rv,.reveal-title{opacity:1!important;transform:none!important}
   /* reveal grid: static, not pinned — title above, grid below */
   .reveal-stage{height:auto}
   .reveal-pin{position:static;height:auto;display:block;padding:clamp(80px,12vh,140px) clamp(20px,3vw,56px)}
